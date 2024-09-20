@@ -1,5 +1,5 @@
 .env
-data/
+data/*
 env/
 output/
 __pycache__/
