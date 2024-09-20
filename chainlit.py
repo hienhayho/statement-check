@@ -2,13 +2,14 @@ import chainlit as cl
 from pathlib import Path
 from src.agents import SQLAgent
 from src.utils import setup_logging
+from src.settings import setting
 
 logger = setup_logging(Path("logs/dev.log"))
 
 
 @cl.on_chat_start
 async def start():
-    agent = SQLAgent()
+    agent = SQLAgent(setting=setting)
 
     cl.user_session.set("agent", agent)
 

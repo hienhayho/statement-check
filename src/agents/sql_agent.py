@@ -12,7 +12,7 @@ from llama_index.core.indices.struct_store.sql_query import (
 )
 from src.database.run import engine, get_db_context
 from src.prompt import REFINE_PROMPT
-from src.settings import MessageRole
+from src.settings import MessageRole, Settings
 
 load_dotenv()
 
@@ -23,7 +23,7 @@ class Message(BaseModel):
 
 
 class SQLAgent:
-    def __init__(self):
+    def __init__(self, setting: Settings):
         prompt = (
             "This table give information about transaction result.\n"
             "It has columns: id, day, month, year, amount, description, code_id.\n"
@@ -31,6 +31,8 @@ class SQLAgent:
             "Some example rows:\n"
             f"{get_db_context()}"
         )
+
+        self.setting = setting
 
         self.sql_database = SQLDatabase(engine, include_tables=["transactionresult"])
         self.table_node_mapping = SQLTableNodeMapping(self.sql_database)
@@ -49,8 +51,10 @@ class SQLAgent:
         The currency of the amount is VND.
         """
 
-        llm = self.load_model("openai", "gpt-4o-mini")
-        self.refine_llm = self.load_model("openai", "gpt-4o-mini", REFINE_PROMPT)
+        llm = self.load_model(self.setting.type, self.setting.llm, self.system_prompt)
+        self.refine_llm = self.load_model(
+            self.setting.type, self.setting.llm, REFINE_PROMPT
+        )
 
         self.query_engine = SQLTableRetrieverQueryEngine(
             self.sql_database,
