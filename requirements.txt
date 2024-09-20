@@ -1,0 +1,7 @@
+fastapi==0.112.4
+sqlmodel==0.0.22
+polars==1.7.1
+uvicorn==0.25.0
+llama-index==0.11.10
+chainlit==1.2.0
+psycopg2-binary==2.9.9

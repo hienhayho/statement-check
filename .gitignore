@@ -1,0 +1,8 @@
+.env
+data/
+env/
+output/
+__pycache__/
+.chainlit/
+.files/
+logs/
