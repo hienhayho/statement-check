@@ -1,5 +1,6 @@
 .env
-data/*
+data/*.pdf
+data/*.csv
 env/
 output/
 __pycache__/
