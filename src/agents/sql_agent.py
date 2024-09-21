@@ -7,6 +7,7 @@ from llama_index.core.objects import SQLTableSchema, SQLTableNodeMapping, Object
 from llama_index.core import SQLDatabase, VectorStoreIndex
 from llama_index.core.bridge.pydantic import BaseModel
 from llama_index.llms.openai import OpenAI
+from llama_index.core.llms.function_calling import FunctionCallingLLM
 from llama_index.core.indices.struct_store.sql_query import (
     SQLTableRetrieverQueryEngine,
 )
@@ -47,11 +48,11 @@ class SQLAgent:
 
         self.history: list[Message] = []
 
-        self.system_prompt = """
-        The currency of the amount is VND.
-        """
+        self.system_prompt = """The currency of the amount is VND."""
 
-        llm = self.load_model(self.setting.type, self.setting.llm, self.system_prompt)
+        llm = self.load_model(
+            self.setting.type, self.setting.llm, self.system_prompt.strip("\n")
+        )
         self.refine_llm = self.load_model(
             self.setting.type, self.setting.llm, REFINE_PROMPT
         )
@@ -72,7 +73,9 @@ class SQLAgent:
         history = self.history[-num_history:]
         return "\n".join([f"- {msg.role}: {msg.content}" for msg in history])
 
-    def load_model(self, model_type: str, model_name: str, system: str = ""):
+    def load_model(
+        self, model_type: str, model_name: str, system: str = ""
+    ) -> FunctionCallingLLM:
         if model_type == "openai":
             return OpenAI(model_name, system_prompt=system)
         else:

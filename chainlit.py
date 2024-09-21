@@ -7,13 +7,24 @@ from src.settings import setting
 logger = setup_logging(Path("logs/dev.log"))
 
 
+@cl.set_starters
+async def set_starters():
+    return [
+        cl.Starter(
+            label="Hỏi số người ủng hộ hơn 1 triệu",
+            message="Có bao nhiêu người ủng hộ hơn 1 triệu ?",
+            icon="/public/message_icon.png",
+        ),
+    ]
+
+
 @cl.on_chat_start
 async def start():
     agent = SQLAgent(setting=setting)
 
     cl.user_session.set("agent", agent)
 
-    await cl.Message("Check var đê !!!").send()
+    # await cl.Message("Check var đê !!!").send()
 
 
 @cl.on_message
