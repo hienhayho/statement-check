@@ -34,6 +34,10 @@ python src/database/run.py --task insert --file_path data/data.csv
 chainlit run chainlit.py
 ```
 
-Demo:
+Start Screen:
 
-![](./examples/chainlit_demo.png)
+![](./examples/start_ui.png)
+
+Chat Screen:
+
+![](./examples/main_ui.png)
