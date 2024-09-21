@@ -24,8 +24,12 @@ class Settings(BaseModel):
         description="Database URL to connect to",
     )
     db_verbose: bool = Field(
-        default=False,
+        default=True,
         description="Verbose mode for database connection",
+    )
+    number_of_msgs: int = Field(
+        default=2,
+        description="Number of history messages to be used to refine",
     )
 
 

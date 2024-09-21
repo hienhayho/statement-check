@@ -32,8 +32,6 @@ async def run(message: cl.Message):
     agent = cl.user_session.get("agent")
     msg = cl.Message(content="", author="Assistant")
 
-    agent.add_message("user", message.content)
-
     res = await cl.make_async(agent.query)(message.content)
 
     response = ""
@@ -42,6 +40,7 @@ async def run(message: cl.Message):
         response += token + " "
         await msg.stream_token(token)
 
+    agent.add_message("user", message.content)
     agent.add_message("system", response)
     logger.info(f"User: {message.content} - System: {response}")
 

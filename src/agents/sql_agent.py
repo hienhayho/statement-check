@@ -54,7 +54,9 @@ class SQLAgent:
             self.setting.type, self.setting.llm, self.system_prompt.strip("\n")
         )
         self.refine_llm = self.load_model(
-            self.setting.type, self.setting.llm, REFINE_PROMPT
+            self.setting.type,
+            self.setting.llm,
+            REFINE_PROMPT.format(num=setting.number_of_msgs),
         )
 
         self.query_engine = SQLTableRetrieverQueryEngine(
@@ -82,11 +84,12 @@ class SQLAgent:
             raise ValueError("Model type not supported")
 
     def refine_question(self, question: str):
-        prompt = f"History: {self.get_history(2)}\nQuestion: {question}\nYour refined question: "
+        prompt = f"History: {self.get_history(self.setting.number_of_msgs)}\nQuestion: {question}\nYour refined question: "
         response = self.refine_llm.complete(prompt)
         return response.text
 
     def query(self, question: str) -> str:
         prompt = self.refine_question(question)
+        print(prompt)
         response = self.query_engine.query(prompt)
         return response
